@@ -3,7 +3,7 @@
 
 #include "mymath.h"
 
-//µ•Œª◊™ªª:gyro[-16383,16384];deg[-90,90];rad[-PI/2,PI/2];pwm[1000,2000];pwmAdd[-1000,1000]
+//Âçï‰ΩçËΩ¨Êç¢:gyro[-16383,16384];deg[-90,90];rad[-PI/2,PI/2];pwm[1000,2000];pwmAdd[-1000,1000]
 #define GyroToDeg(x)          ((float)(x)*0.0076293945)  //(x*250/2^15)
 #define GyroToRad(x)          ((float)(x)*1.331580545e-4)
 #define DegToRad(x)           ((x)*0.0174532925)  //(x/57.3)
@@ -26,7 +26,7 @@ typedef struct
 }AxisInt;
 
 float IIR_LowPassFilter(float DataIn,float *delay);
-void Acc_Calibrate(AxisInt *acc);
-void IMUupdate(AxisInt acc,AxisInt *gyro,Quaternion *Q);
+void Gyro_Calibrate(AxisInt *gyro);
+void IMUupdate(AxisInt gyro,Quaternion *Q);
 
 #endif
