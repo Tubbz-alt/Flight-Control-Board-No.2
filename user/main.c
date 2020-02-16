@@ -20,16 +20,12 @@ int main(void)
 {
 /*初始化*/
 	PWM_OUT_Configuration();  //上电后先输出控制信号
-	Para_Init();  //设置油门为最低点、舵机归中，以及其它参数设置
 	IWDG_Init();  //若初始化失败可复位重新初始化
 	(MPU_Init());  //若MPU6050初始化失败则复位重启
-	PWM_IN_Configuration();
 	SysTick_Init();
-	uart1_init(38400);  //数传的波特率要单独设置，所以尽量不要改波特率
+	uart1_init(115200);  //数传的波特率要单独设置，所以尽量不要改波特率
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	DMA_Config();
-	LED_GPIO_Config();
-	LED_SELECT(AircraftMode);  //初始化完成后，机型对应的指示灯亮
 /*死循环*/
  	while(1)
 	{
@@ -40,22 +36,20 @@ int main(void)
 		}
 		if(TaskFlag & TASK_20ms)
 		{
-			RC_Prepare();
 			IMU_Processing();
-			Motor_Iner_loop();
+			Speed_Control();
 			Send_Data_To_DMA_20ms();
 			DMA_Enable();
 			TaskFlag&=~TASK_20ms;
 		}
 		if(TaskFlag & TASK_50ms)
 		{
-			Motor_Outer_loop();
+			Position_Control();
 			Send_Data_To_DMA_50ms();
 			TaskFlag&=~TASK_50ms;
 		}
 		if(TaskFlag & TASK_100ms)
 		{
-			Lock_And_Unlock();
 			PID_Set_Parameter();
 			TaskFlag&=~TASK_100ms;
 		}
